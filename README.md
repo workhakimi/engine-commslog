@@ -14,13 +14,17 @@ npm install
 npm run build
 ```
 
-## Serve (local dev)
+## Local development (component must load in editor)
 
-```bash
-npm run serve -- --port=8080
-```
+**Important:** Local components only work in the **Dev Editor**, not the regular editor.
 
-In WeWeb: Developer popup → Add custom element → `http://localhost:8080`
+1. Start the dev server: `npm run serve` (port 8080 by default)
+2. Authorize SSL: open **https://localhost:8080** and accept the certificate
+3. WeWeb Dashboard → Dev tab → **Open Dev Editor**
+4. Dev tab → Element → **Add local Element** → enter port **8080**
+5. Drag the component onto the canvas
+
+See **[LOADING-GUIDE.md](./LOADING-GUIDE.md)** for full troubleshooting.
 
 ## Bindings
 
