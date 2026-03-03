@@ -1,8 +1,8 @@
 {
-  "name": "gdm-comms-log",
-  "version": "1.0.0",
+  "name": "ww-gdm-comms-log",
+  "version": "1.0.1",
   "scripts": {
-    "build": "weweb build name=gdm-comms-log type=element",
+    "build": "weweb build",
     "serve": "weweb serve"
   },
   "devDependencies": {
