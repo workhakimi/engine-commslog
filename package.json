@@ -1,0 +1,14 @@
+{
+  "name": "ww-gdm-comms-log",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "weweb build name=ww-gdm-comms-log type=element",
+    "serve": "weweb serve"
+  },
+  "dependencies": {
+    "vue": "^3.x"
+  },
+  "devDependencies": {
+    "@weweb/cli": "latest"
+  }
+}
