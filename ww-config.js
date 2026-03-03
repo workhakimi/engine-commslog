@@ -1,17 +1,17 @@
 export default {
   editor: {
     label: { en: 'GDM Comms Log' },
-    icon: 'chat',
+    icon: 'pencil',
     customSettingsPropertiesOrder: [
-      'disableInteractions',
+      'viewMode',
       { label: 'Data', isCollapsible: true, properties: ['commsData', 'cmsItem', 'usersData', 'currentUserId'] },
       { label: 'Field mapping', isCollapsible: true, properties: ['idFormula', 'messageFormula', 'userIdFormula', 'cmsIdFormula', 'createdAtFormula'] },
       { label: 'Labels', isCollapsible: true, properties: ['articleTitleLabel', 'placeholderLabel', 'submitButtonText'] },
     ],
     customStylePropertiesOrder: [
-      { label: 'Container', isCollapsible: true, properties: ['backgroundColor', 'borderRadius', 'padding'] },
+      { label: 'Container', isCollapsible: true, properties: ['backgroundColor', 'borderRadius', 'maxHeight'] },
       { label: 'Messages', isCollapsible: true, properties: ['messageBackgroundColor', 'messageBorderColor', 'avatarBackgroundColor'] },
-      { label: 'Input', isCollapsible: true, properties: ['inputBackgroundColor', 'inputBorderColor', 'inputFocusColor'] },
+      { label: 'Input', isCollapsible: true, properties: ['inputBackgroundColor', 'inputBorderColor', 'accentColor'] },
       { label: 'Typography', isCollapsible: true, properties: ['fontFamily', 'fontSize', 'textColor'] },
     ],
   },
@@ -23,20 +23,31 @@ export default {
       default: true,
     },
     {
+      name: 'onDeleteComment',
+      label: { en: 'On delete comment (admin)' },
+      event: { value: { id: null, message: null } },
+    },
+    {
       name: 'onCommentClick',
       label: { en: 'On comment click' },
       event: { value: { comment: null } },
     },
   ],
   properties: {
-    disableInteractions: {
-      label: { en: 'Disable interactions' },
-      type: 'OnOff',
+    viewMode: {
+      label: { en: 'View mode' },
+      type: 'TextSelect',
       section: 'settings',
-      defaultValue: false,
+      options: {
+        options: [
+          { value: 'admin', label: { en: 'Admin – Full control + delete' } },
+          { value: 'client', label: { en: 'Client – Post & view only' } },
+        ],
+      },
+      defaultValue: 'admin',
       bindable: true,
       /* wwEditor:start */
-      bindingValidation: { type: 'boolean', tooltip: 'When true, cannot add comments or click' },
+      bindingValidation: { type: 'string', tooltip: '"admin" or "client"' },
       /* wwEditor:end */
     },
     commsData: {
@@ -46,7 +57,7 @@ export default {
       bindable: true,
       defaultValue: [],
       /* wwEditor:start */
-      bindingValidation: { type: 'array', tooltip: 'List of comms_log rows (filtered by cms_id in WeWeb)' },
+      bindingValidation: { type: 'array', tooltip: 'List of comms_log rows (filtered by cms_id in Supabase/WeWeb)' },
       /* wwEditor:end */
     },
     cmsItem: {
@@ -56,7 +67,7 @@ export default {
       bindable: true,
       defaultValue: null,
       /* wwEditor:start */
-      bindingValidation: { type: 'object', tooltip: 'Current article/CMS item this log belongs to' },
+      bindingValidation: { type: 'object', tooltip: 'Current article this log belongs to (cms row)' },
       /* wwEditor:end */
     },
     usersData: {
@@ -66,7 +77,7 @@ export default {
       bindable: true,
       defaultValue: [],
       /* wwEditor:start */
-      bindingValidation: { type: 'array', tooltip: 'List of users for name lookup (user_record)' },
+      bindingValidation: { type: 'array', tooltip: 'List of user_record rows for name lookup' },
       /* wwEditor:end */
     },
     currentUserId: {
@@ -76,7 +87,7 @@ export default {
       bindable: true,
       defaultValue: '',
       /* wwEditor:start */
-      bindingValidation: { type: 'string', tooltip: 'UUID of logged-in user for new comments' },
+      bindingValidation: { type: 'string', tooltip: 'UUID of the logged-in user (for posting comments)' },
       /* wwEditor:end */
     },
     idFormula: {
@@ -130,7 +141,7 @@ export default {
       hidden: (content, sidepanelContent, boundProps) => !boundProps?.commsData,
     },
     articleTitleLabel: {
-      label: { en: 'Article title label' },
+      label: { en: 'Header label' },
       type: 'Text',
       section: 'settings',
       multilang: true,
@@ -142,11 +153,11 @@ export default {
       type: 'Text',
       section: 'settings',
       multilang: true,
-      defaultValue: 'Add a comment...',
+      defaultValue: 'Add a comment…',
       bindable: true,
     },
     submitButtonText: {
-      label: { en: 'Submit button text' },
+      label: { en: 'Post button text' },
       type: 'Text',
       section: 'settings',
       multilang: true,
@@ -168,19 +179,19 @@ export default {
       type: 'Length',
       section: 'style',
       options: { unitChoices: [{ value: 'px', label: 'px', min: 0, max: 24 }] },
-      defaultValue: '12px',
+      defaultValue: '14px',
       bindable: true,
     },
-    padding: {
-      label: { en: 'Padding' },
+    maxHeight: {
+      label: { en: 'Message list max height' },
       type: 'Length',
       section: 'style',
-      options: { unitChoices: [{ value: 'px', label: 'px', min: 0, max: 32 }] },
-      defaultValue: '20px',
+      options: { unitChoices: [{ value: 'px', label: 'px', min: 200, max: 800 }] },
+      defaultValue: '420px',
       bindable: true,
     },
     messageBackgroundColor: {
-      label: { en: 'Message background' },
+      label: { en: 'Message bubble background' },
       type: 'Color',
       section: 'style',
       defaultValue: '#ffffff',
@@ -196,7 +207,7 @@ export default {
       defaultValue: '#e2e8f0',
       bindable: true,
       /* wwEditor:start */
-      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Message border' },
+      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Message border color' },
       /* wwEditor:end */
     },
     avatarBackgroundColor: {
@@ -206,7 +217,7 @@ export default {
       defaultValue: '#0d9488',
       bindable: true,
       /* wwEditor:start */
-      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Avatar/initials background' },
+      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Avatar circle background' },
       /* wwEditor:end */
     },
     inputBackgroundColor: {
@@ -216,7 +227,7 @@ export default {
       defaultValue: '#ffffff',
       bindable: true,
       /* wwEditor:start */
-      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Input background' },
+      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Text input background' },
       /* wwEditor:end */
     },
     inputBorderColor: {
@@ -226,17 +237,17 @@ export default {
       defaultValue: '#e2e8f0',
       bindable: true,
       /* wwEditor:start */
-      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Input border' },
+      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Text input border' },
       /* wwEditor:end */
     },
-    inputFocusColor: {
-      label: { en: 'Input focus color' },
+    accentColor: {
+      label: { en: 'Accent / button color' },
       type: 'Color',
       section: 'style',
       defaultValue: '#0d9488',
       bindable: true,
       /* wwEditor:start */
-      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Focus ring color' },
+      bindingValidation: { cssSupports: 'color', type: 'string', tooltip: 'Post button and link color' },
       /* wwEditor:end */
     },
     fontFamily: {
